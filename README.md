@@ -1,4 +1,27 @@
-Описание протокола
+# Управление кондиционером Kentatsu KSGB35
+
+
+![KEntatsu](image.jpg)
+![KEntatsu](image_pult.jpg)
+
+## Прошивка Arduino NodeMCU v1 (esp8266)
+
+Пример
+```
+#B27BE0 = [[REMOTE OFF AC]]
+10110010_011_11011_1110_00_00
+
+#B2BFC0 = [[JUST ON]] = MODE COOL | FAN AUTO | TEMP 25
+10110010_101_11111_1100_00_00
+
+irsend.sendCOOLIX(0xB2BFC0);
+```
+
+## Html для генерации IR кода
+
+
+
+## Описание протокола
 Есть три значения 
 0 - 532
 1 - 1623
