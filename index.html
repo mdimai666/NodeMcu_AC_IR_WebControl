@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Description" content="Enter your description here" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- <link rel="stylesheet" href="assets/css/style.css"> -->
+    <title>Title</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+
+    <div class="container p-4">
+
+        <div class="row">
+            <div class="col-12">
+                <input id="v1" class="form-control" value="101100100111101111100000" onchange="onchange()" />
+
+                <div id="old1" class="d-none">
+                    <p>d1 - calced
+                    <div id="d1">?</div>
+                    </p>
+                    <p>d2 - original half
+                    <div id="d2">?</div>
+                    </p>
+                    <p>dd - remove prefix zero
+                    <div id="d3">?</div>
+
+                    </p>
+
+                    <div id="alert1" class="alert">
+                        PASS
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div id="dict" class="col-6">
+
+            </div>
+            <div class="col-6">
+                <div id="pult">
+                    <button class="" onclick="pult()">on</button>
+                    <button class="" onclick="pult('off')">off</button>
+                </div>
+                <p></p>
+                temp:
+                <select id="temp" onchange="pult()">
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25" selected>25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+
+                </select>
+                <p></p>
+                <div>fan:</div>
+                <label><input onchange="pult()" type='radio' name="fan" value="auto" checked />auto</label>
+                <label><input onchange="pult()" type='radio' name="fan" value="low" />low</label>
+                <label><input onchange="pult()" type='radio' name="fan" value="mid" />mid</label>
+                <label><input onchange="pult()" type='radio' name="fan" value="high" />high</label>
+
+                <div>mode:</div>
+                <label><input onchange="pult()" type='radio' name="mode" value="auto" />auto</label>
+                <label><input onchange="pult()" type='radio' name="mode" value="fan" />fan</label>
+                <label><input onchange="pult()" type='radio' name="mode" value="heat" />heat</label>
+                <label><input onchange="pult()" type='radio' name="mode" value="dry" />dry</label>
+                <label><input onchange="pult()" type='radio' name="mode" value="cool" checked />cool</label>
+
+                <p></p>
+                <div>
+                    <div>
+                        result: <input type="text" id="pultresult1" disabled>
+                        <a id="irsend" class="btn btn-link">send</a>
+                        <br>
+                    </div>
+                    <div>
+                        result byte: <input type="text" id="pultresult1b" disabled class="w-75">
+                        <br>
+                    </div>
+                    find : <input type="text" id="find1" disabled>
+                    <p></p>
+                    Debug : <textarea id="debug1" class="form-control" rows="5"></textarea>
+                    <p></p>
+                    Raw1 : <textarea id="raw1" class="form-control" rows="15"></textarea>
+
+                    <p></p>
+                    Raw2 :
+                    <textarea id="raw2" class="form-control" rows="15"></textarea>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        //Записанная кнопка отключения
+        const off_raw_arr = [4398, 4434, 534, 1622, 532, 544, 534, 1622, 534, 1622, 534, 542, 534, 544, 532, 1620, 534, 542, 534, 544, 532, 1624, 532, 544, 532, 546, 532, 1622, 532, 1622, 532, 544, 534, 1622, 536, 542, 532, 1622, 534, 1622, 534, 1622, 534, 1622, 532, 544, 532, 1622, 536, 1622, 532, 1622, 532, 544, 532, 546, 532, 544, 532, 544, 534, 1620, 532, 544, 532, 544, 534, 1620, 534, 1622, 532, 1622, 532, 544, 532, 546, 532, 544, 532, 544, 532, 546, 534, 542, 532, 544, 534, 542, 534, 1620, 534, 1620, 534, 1620, 534, 1624, 532, 1622, 532, 5222, 4400, 4434, 532, 1620, 534, 544, 532, 1622, 532, 1622, 532, 544, 532, 544, 534, 1620, 534, 546, 532, 544, 532, 1622, 534, 542, 534, 544, 534, 1622, 532, 1620, 534, 544, 534, 1620, 532, 546, 532, 1622, 534, 1622, 534, 1620, 534, 1622, 532, 544, 534, 1620, 534, 1620, 532, 1622, 534, 544, 532, 546, 532, 544, 532, 546, 530, 1622, 534, 544, 532, 544, 532, 1624, 532, 1620, 534, 1622, 532, 544, 530, 546, 532, 544, 534, 544, 532, 546, 530, 544, 532, 544, 532, 546, 534, 1620, 532, 1620, 534, 1622, 532, 1624, 532, 1620, 532]
+        const off_raw = 'uint16_t a_off[199] = {4398, 4434, 534, 1622, 532, 544, 534, 1622, 534, 1622, 534, 542, 534, 544, 532, 1620, 534, 542, 534, 544, 532, 1624, 532, 544, 532, 546, 532, 1622, 532, 1622, 532, 544, 534, 1622, 536, 542, 532, 1622, 534, 1622, 534, 1622, 534, 1622, 532, 544, 532, 1622, 536, 1622, 532, 1622, 532, 544, 532, 546, 532, 544, 532, 544, 534, 1620, 532, 544, 532, 544, 534, 1620, 534, 1622, 532, 1622, 532, 544, 532, 546, 532, 544, 532, 544, 532, 546, 534, 542, 532, 544, 534, 542, 534, 1620, 534, 1620, 534, 1620, 534, 1624, 532, 1622, 532, 5222, 4400, 4434, 532, 1620, 534, 544, 532, 1622, 532, 1622, 532, 544, 532, 544, 534, 1620, 534, 546, 532, 544, 532, 1622, 534, 542, 534, 544, 534, 1622, 532, 1620, 534, 544, 534, 1620, 532, 546, 532, 1622, 534, 1622, 534, 1620, 534, 1622, 532, 544, 534, 1620, 534, 1620, 532, 1622, 534, 544, 532, 546, 532, 544, 532, 546, 530, 1622, 534, 544, 532, 544, 532, 1624, 532, 1620, 534, 1622, 532, 544, 530, 546, 532, 544, 534, 544, 532, 546, 530, 544, 532, 544, 532, 546, 534, 1620, 532, 1620, 534, 1622, 532, 1624, 532, 1620, 532};'
+
+
+        //Примеры записанных хначений
+        let cmds = [{
+            label: 'FAN - HIGH TEMP 30 ',
+            code: 'B23FE4',
+        },
+        {
+            label: 'FAN - MID TEMP 30 ',
+            code: 'B25FE4',
+        },
+        {
+            label: 'FAN - LOW TEMP 30 ',
+            code: 'B29FE4',
+        },
+        {
+            label: 'MODE FAN 30 FAN AUTO ',
+            code: 'B2BFE4',
+        },
+        {
+            label: 'MODE HEAT 30 FAN AUTO',
+            code: 'B2BFBC',
+        },
+        {
+            label: 'MODE DRY 30 FAN AUTO',
+            code: 'B21FB4',
+        },
+        {
+            label: 'MODE COOL 30  FAN AUTO',
+            code: 'B2BFB0',
+        },
+        {
+            label: 'TEMP 30 AUTO MODE',
+            code: 'B21FB8',
+        },
+        {
+            label: 'TEMP 29 AUTO MODE',
+            code: 'B21FA8',
+        },
+        {
+            label: 'TEMP 28 AUTO MODE',
+            code: 'B21F88',
+        },
+        {
+            label: 'TEMP 27 AUTO MODE',
+            code: 'B21F98',
+        },
+        {
+            label: 'TEMP 26 AUTO MODE',
+            code: 'B21FD8',
+        },
+        {
+            label: 'TEMP 25 AUTO MODE',
+            code: 'B21FC8',
+        },
+        {
+            label: 'TEMP 24 AUTO MODE',
+            code: 'B21F48',
+        },
+        {
+            label: 'TEMP 23 AUTO MODE',
+            code: 'B21F58',
+        },
+        {
+            label: 'TEMP 22 AUTO MODE',
+            code: 'B21F78',
+        },
+        {
+            label: 'TEMP 21 AUTO MODE',
+            code: 'B21F68',
+        },
+        {
+            label: 'TEMP 20 AUTO MODE',
+            code: 'B21F28',
+        },
+        {
+            label: 'TEMP 19 AUTO MODE',
+            code: 'B21F38',
+        },
+        {
+            label: 'TEMP 18 AUTO MODE',
+            code: 'B21F18',
+        },
+        {
+            label: 'TEMP 17 AUTO MODE',
+            code: 'B21F08',
+        },
+        {
+            label: 'REMOTE OFF AC',
+            code: 'B27BE0'
+        },
+        {
+            label: 'JUST ON = MODE COOL | FAN AUTO | TEMP 25',
+            code: 'B2BFC0'
+        }]
+
+        console.warn("CHANGE")
+
+        function hex2bin(hex) {
+            let bin = "";
+            let bitsInHex = 4;
+
+            Array.from(hex).forEach(
+                function (char) {
+                    let currentBin = parseInt(char, 16).toString(2);
+
+                    if (currentBin.length < bitsInHex) {
+                        let padding = "0".repeat(bitsInHex - currentBin.length);
+                        currentBin = padding + currentBin;
+                    }
+
+                    bin += currentBin;
+                }
+            );
+
+            return bin;
+        }
+
+        function bin2hex(bin) {
+            let hex = "";
+            let bitsInHex = 4;
+
+            for (let i = 0; i < bin.length; i = i + bitsInHex) {
+                let eightBits = bin.substr(i, bitsInHex);
+                let currentHex = (parseInt(eightBits, 2)).toString(16).toUpperCase();
+                hex += currentHex;
+            }
+
+            return hex;
+        }
+
+        function dec2bin(dec) {
+            return (dec >>> 0).toString(2);
+        }
+
+        function pad(a, b) {
+            return (1e15 + a + '').slice(-b);
+        }
+
+
+        function convert_temp(t) {
+            if (t <= 17) return '0000'
+            else if (t >= 30) return '1011'
+
+            if (t == 26) return '1101';
+            if (t == 25) return '1100';
+            if (t == 29) return '1010';
+            if (t == 27) return '1001';
+            if (t == 28) return '1000';
+            if (t == 22) return '0111';
+            if (t == 21) return '0110';
+            if (t == 23) return '0101';
+            if (t == 24) return '0100';
+            if (t == 19) return '0011';
+            if (t == 20) return '0010';
+            if (t == 18) return '0001';
+
+        }
+
+
+        try {
+            var alert1 = $('#alert1')
+            var v1 = $('#v1')
+            var d1 = $('#d1')
+            var d2 = $('#d2')
+            var d3 = $('#d3')
+
+            var dd = $('#dict')
+            var pultresult1 = $('#pultresult1')
+            var pultresult1b = $('#pultresult1b')
+            var find1 = $('#find1')
+            var debug1 = $('#debug1')
+            var raw1 = $('#raw1')
+            var raw2 = $('#raw2')
+
+            const z1 = '0100010100000100000100000101000100010101010001010100000000010000010101000000000000000001010101010'
+
+            function onchange() {
+                let html = 'x'
+
+                html = cmds.map(s => {
+
+                    // let bin = s.code.split('').map(s => hex2bin(s)).join('');
+                    let bin = hex2bin(s.code)
+
+                    let d =
+                        `<div class="">
+                            <div class="d-flex">
+                                <div class="text-primary font-weight-bold">${s.code}</div>
+                                <div class="text-secondary ml-2">${s.label}</div>
+                            </div>
+                            <div>
+                                ${bin}<br>
+                                <!--101100101011111111000000-->
+                            </div>
+                        </div>`;
+
+                    if (s.code == 'B29FE4' || s.code == 'B2BFB0') {
+                        d += '<p></p>'
+                    }
+
+                    return d
+
+                }).join('\n')
+
+
+                dd.html(html)
+
+            }
+
+            function onchange2() {
+                let st = v1.val().split('')
+                st = st.map(s => `0${s}`)
+                d1.html(st)
+                d2.html(z1)
+
+                let method = z1 == st ? 'success' : 'danger'
+
+                alert1.removeClass('alert-success alert-danger')
+
+                alert1.addClass('alert-' + method)
+                alert1.text(method)
+
+                let h = '0100010100000100000100000101000100010101010001010100000000010000010101000000000000000001010101010'
+                h = h.match(/.{1,2}/g).map(s => s.split('')[1]).join('')
+                d3.text(h)
+            }
+
+            // console.warn(11)
+
+            onchange()
+
+            // 3-х битные константы задержки ИК сигнала.
+            // есть только такие остальные погрешность
+            const irv1 = 532;
+            const irv2 = 1623;
+            const irv3 = 4578;
+
+            function pult(e) {
+
+                console.warn(new Date, e)
+                debug1.removeClass('border-success')
+                debug1.removeClass('border-danger')
+
+                try {
+                    let temp = $('#temp').val()
+                    let fan = $('[name="fan"]:checked').val()
+                    let mode = $('[name="mode"]:checked').val()
+
+                    let FAN = `000`;
+                    let TEMP = `1011`;
+                    let MODE = `10`;
+
+                    // TEMP = pad(dec2bin(temp * 1 - 17),4)
+                    TEMP = convert_temp(temp)
+
+                    if (mode == 'auto') MODE = '10'
+                    else if (mode == 'fan') MODE = '01'
+                    else if (mode == 'heat') MODE = '11'
+                    else if (mode == 'dry') MODE = '01'
+                    else if (mode == 'cool') MODE = '00'
+
+
+                    if (fan == 'auto' && mode == 'auto') {
+                        FAN = '000'
+                    }
+                    else if (fan == 'auto') {
+                        if (mode == 'auto' || mode == 'dry')
+                            FAN = '000'
+                        else
+                            FAN = '101'
+
+                    }
+                    else if (fan == 'high') FAN = '001'
+                    else if (fan == 'mid') FAN = '010'
+                    else if (fan == 'low') FAN = '100'
+
+
+
+                    debug1.val(TEMP);
+
+                    let R = `10110010${FAN}11111${TEMP}${MODE}00`
+                    let R2 = `10110010_${FAN}_11111_${TEMP}_${MODE}_00`
+
+                    if (e === 'off') {
+                        R = '101100100111101111100000'
+                        R2 = '10110010_011_11011_1110_00_00'
+                    }
+
+                    let Rhex = bin2hex(R); //Окончательный результат. который надо отправить
+
+                    let CMD = Rhex
+
+                    pultresult1.val(CMD);
+                    pultresult1b.val(R2);
+                    let f = cmds.find(s => s.code == CMD);
+                    find1.val(f?.label ?? 'none');
+
+
+                    //CALC RAW просто эксперимет
+                    let RAW1 = R;
+                    RAW1 = RAW1.split('').map(s => `0${s}`).join('');
+
+                    let FULLRAW = '22' + RAW1 + '222' + RAW1;
+
+                    let mapping = {
+                        '2': irv3,
+                        '1': irv2,
+                        '0': irv1
+                    }
+
+                    let FULLRAW2 = FULLRAW.split('').map(s => mapping[s]).join(', ');
+
+                    let FULLRAWtext = `uint16_t rawData[199] = {${FULLRAW2}}`
+
+                    raw1.val(
+                        FULLRAW
+                            .replace('222', '\n222\n')
+                            .replace('22', '22\n')
+                    )
+
+                    let const_raw = off_raw_arr.map(s => s > 2000 ? '2' : (s > 1000 ? '1' : '0')).join('')
+                    // .replace('222', '\n222\n')
+                    // .replace('22', '22\n')
+
+                    raw2.val(const_raw)
+
+                    // let half1 = '0100010100000100000100000101000100010101010001010100000000010000010101000000000000000001010101010'
+
+                    // half1 = half1
+                    //     .match(/.{1,2}/g)
+                    //     .map(s => s.substr(1,1)).join('')
+                    //     // .match(/.{1,4}/g)
+                    //     // .join(', ')
+                    //     // .join('')
+
+                    // // half1 = bin2hex(half1)
+
+                    // debug1.val(half1);
+
+                    let mapping24bit = {
+                        2: '11',
+                        1: '01',
+                        0: '00',
+                    }
+
+                    let g = const_raw
+                    // .slice(2,99)
+                    // .match(/.{1,2}/g)
+                    // .map(s => s.substr(1,1)).join('')
+                    // .split('')
+                    // .map(s=>mapping24bit[s])
+                    // .join('')
+                    // .match(/.{1,8}/g)
+                    // .split('')
+                    // .map(s => s.substr(3,1)).join('')
+
+                    // 101100100100110101111011100001001110000000011111
+                    // 101100101011111111000000
+
+                    // g = bin2hex(g)
+
+
+                    let zee = g;
+
+                    debug1.val(zee);
+
+                    debug1.addClass('border-success')
+                } catch (error) {
+                    debug1.addClass('border-danger')
+                    debug1.val(error.message)
+                }
+            }
+
+            pult();
+
+
+            function irsend() {
+                let hexString = pultresult1.val()
+                let decimal = parseInt(hexString, 16);
+                // alert(decimal)
+
+                $.get('http://192.168.3.6/api/ac/?code='+decimal)
+            }
+
+            $('#irsend').click(irsend)
+
+        } catch (error) {
+            console.error('1' + error)
+        }
+
+
+    </script>
+
+
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 10pt;
+        }
+
+        label {
+            user-select: none;
+        }
+    </style>
+</body>
+
+</html>
